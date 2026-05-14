@@ -1,4 +1,3 @@
-import './App.css';
 import Calendar from './feats/Calendar';
 import PickAssigner from './feats/PickAssigner';
 import { CalendarProvider } from './context/CalendarProvider';

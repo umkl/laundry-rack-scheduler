@@ -203,7 +203,8 @@ export default function Calendar() {
                 )}
             </div>
             <div className="container mx-auto p-4 bg-red-400 rounded-lg">
-                currently assigning for {assigner?.name || 'not set'}
+                you are currently assigning for{' '}
+                <span className="underline">{assigner?.name || 'not set'}</span>
             </div>
         </div>
     );
