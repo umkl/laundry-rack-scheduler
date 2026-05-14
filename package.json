@@ -3,13 +3,11 @@
     "version": "0.1.0",
     "scripts": {
         "web:dev": "bun --cwd ./app/web dev",
-        "web:format": "bun --cwd ./app/web format"
+        "web:format": "bun --cwd ./app/web format",
+        "web:add": "bun --cwd ./app/web add",
+        "web:ship": "bun --cwd ./app/web ship"
     },
     "workspaces": [
         "app/web"
-    ],
-    "dependencies": {
-        "lucide": "^1.14.0",
-        "lucide-react": "^1.14.0"
-    }
+    ]
 }
