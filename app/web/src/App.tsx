@@ -22,7 +22,7 @@ function App() {
     }, [query.data, setUsers]);
 
     return (
-        <div className="h-screen relative flex flex-col">
+        <div className="h-dvh relative flex flex-col">
             <div className="bg-blue-200 p-4">
                 <h1 className="text-3xl font-bold text-center">
                     laundry-rack-scheduler

@@ -12,6 +12,9 @@ export default function Calendar() {
     const [date, setDate] = useState<Date>(new Date());
     const { assigner } = useContext(CalendarContext);
     const [schedules, setSchedules] = useState<any>([]);
+    const [schedulePreview, setSchedulePreview] = useState<
+        Schedule | undefined
+    >();
 
     const hours = Array.from({ length: 24 }, (_, i) => i);
 
@@ -54,6 +57,7 @@ export default function Calendar() {
             ]);
             setStartDate(undefined);
             setEndDate(undefined);
+            setSchedulePreview(undefined);
         },
     });
 
@@ -67,6 +71,11 @@ export default function Calendar() {
                 return;
             } else {
                 setEndDate(datePick);
+                setSchedulePreview({
+                    end: datePick,
+                    start: startDate,
+                    assigner: assigner?.name,
+                });
             }
         } else {
             setStartDate(datePick);
@@ -77,6 +86,7 @@ export default function Calendar() {
         setSchedules([]);
         setStartDate(undefined);
         setEndDate(undefined);
+        setSchedulePreview(undefined);
     }
 
     function confirm() {
@@ -99,9 +109,9 @@ export default function Calendar() {
 
     return (
         <div className="flex flex-col flex-1 h-full bg-red-200 overflow-hidden">
-            <div className="rounded-lg flex-1 bg-orange-100 p-4 flex flex-col container mx-auto overflow-hidden">
-                <div className="flex flex-row justify-between items-center w-full bg-green-400">
-                    <div onClick={next} className="p-4 bg-red-600">
+            <div className="flex-1 bg-orange-100 p-4 flex flex-col container mx-auto overflow-hidden">
+                <div className="flex flex-row justify-between items-center w-full bg-green-400 px-2">
+                    <div onClick={prev} className="p-4 bg-red-600">
                         <ChevronLeft />
                     </div>
                     <div className="flex flex-col items-center">
@@ -109,7 +119,7 @@ export default function Calendar() {
                         <h2 className="font-semibold">weekday</h2>
                         <p>{date?.toLocaleDateString('de-AT')}</p>
                     </div>
-                    <div onClick={prev} className="p-4 bg-red-600">
+                    <div onClick={next} className="p-4 bg-red-600">
                         <ChevronRight />
                     </div>
                 </div>
@@ -151,6 +161,45 @@ export default function Calendar() {
                             </div>
                         );
                     })}
+                    {schedulePreview &&
+                        [schedulePreview].map((schedule: Schedule) => {
+                            const rowStart =
+                                new Date(schedule.start).getHours() + 1;
+                            const rowEnd =
+                                new Date(schedule.end).getHours() + 2;
+                            const style = {
+                                gridRowStart: rowStart,
+                                gridRowEnd: rowEnd,
+                            };
+                            return (
+                                <div
+                                    key={'preview'}
+                                    className={
+                                        'bg-gray-500/40 backdrop-blur-lg w-full h-full absolute col-start-2 col-end-2'
+                                    }
+                                    style={style}
+                                >
+                                    {schedule.assigner}
+                                    <br />
+                                    {new Date(
+                                        schedule.start
+                                    ).toLocaleTimeString('de-AT', {
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                        hour12: false,
+                                    })}{' '}
+                                    -{' '}
+                                    {new Date(schedule.end).toLocaleTimeString(
+                                        'de-AT',
+                                        {
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                            hour12: false,
+                                        }
+                                    )}
+                                </div>
+                            );
+                        })}
 
                     {hours.map((hour) => (
                         <>
@@ -167,7 +216,7 @@ export default function Calendar() {
                     ))}
                 </div>
             </div>
-            <div className="flex flex-row gap-4 container justify-between mx-auto p-4 bg-red-400 rounded-lg items-center">
+            <div className="flex flex-row gap-4 container justify-between mx-auto p-4 bg-red-400 items-center">
                 <div className="flex flex-row gap-4">
                     <p>
                         start:{' '}
@@ -202,7 +251,7 @@ export default function Calendar() {
                     </div>
                 )}
             </div>
-            <div className="container mx-auto p-4 bg-red-400 rounded-lg">
+            <div className="container mx-auto p-4 bg-orange-300">
                 you are currently assigning for{' '}
                 <span className="underline">{assigner?.name || 'not set'}</span>
             </div>
